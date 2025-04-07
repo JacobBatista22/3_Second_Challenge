@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      background-color: #d2b48c; /* Tan background */
+      background-color: #d2b48c;
       padding: 20px;
       min-height: 100vh;
     }
@@ -26,13 +26,8 @@
       margin: 20px 0;
       line-height: 1;
       border-radius: 12px;
-      transition: all 0.2s;
-    }
-    #main-btn:hover {
-      transform: scale(1.02);
     }
     .result-box {
-      transition: all 0.3s;
       margin: 20px auto;
       max-width: 500px;
       padding: 20px;
@@ -47,25 +42,8 @@
     .hidden { display: none; }
     canvas { max-height: 300px; }
     .control-btn {
-      font-size: 1rem;
       padding: 8px 16px;
       margin: 5px;
-      transition: all 0.2s;
-    }
-    .control-btn:hover {
-      transform: scale(1.05);
-    }
-    h1 {
-      color: #343a40;
-      margin-bottom: 25px;
-      font-weight: 600;
-    }
-    .card {
-      border: none;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .table {
-      margin-bottom: 0;
     }
   </style>
 </head>
@@ -73,13 +51,8 @@
 <div class="challenge-container">
   <div class="text-center">
     <h1>3-Second Challenge</h1>
-
     <button id="main-btn" class="btn btn-primary">Start</button>
-
-    <div id="result" class="result-box rounded hidden">
-      <div class="time-display fw-bold"></div>
-      <div class="diff-display"></div>
-    </div>
+    <div id="result" class="result-box rounded hidden"></div>
 
     <div class="my-4">
       <button id="toggle-history" class="btn btn-outline-secondary control-btn">History</button>
@@ -125,6 +98,6 @@
   </div>
 </div>
 
-<script src="script1.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

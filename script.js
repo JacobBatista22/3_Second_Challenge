@@ -3,12 +3,10 @@ var startTime;
 var attempts = [];
 var chart = null;
 
-// Get DOM elements
 var mainBtn = document.getElementById('main-btn');
 var resultDiv = document.getElementById('result');
 var historyBody = document.getElementById('history-body');
 
-// Main button click handler
 mainBtn.addEventListener('click', function() {
     if (mainBtn.textContent === 'Start') {
         startTime = new Date();
@@ -38,7 +36,7 @@ mainBtn.addEventListener('click', function() {
         mainBtn.classList.add('btn-primary');
 
         resultDiv.className = 'result-box rounded ' + resultClass;
-        resultDiv.innerHTML = '<div class="time-display fw-bold">' + elapsed.toFixed(3) + ' seconds</div>' +
+        resultDiv.innerHTML = '<div class="time-display">' + elapsed.toFixed(3) + ' seconds</div>' +
             '<div class="diff-display">(' + diff.toFixed(3) + ' from target)</div>';
         resultDiv.classList.remove('hidden');
 
@@ -51,12 +49,11 @@ mainBtn.addEventListener('click', function() {
 function updateHistory() {
     historyBody.innerHTML = '';
     for (var i = 0; i < attempts.length; i++) {
-        var attempt = attempts[i];
         var row = document.createElement('tr');
-        row.className = attempt.resultClass;
-        row.innerHTML = '<td>' + attempt.number + '</td>' +
-            '<td>' + attempt.time.toFixed(3) + '</td>' +
-            '<td>' + attempt.diff.toFixed(3) + '</td>';
+        row.className = attempts[i].resultClass;
+        row.innerHTML = '<td>' + attempts[i].number + '</td>' +
+            '<td>' + attempts[i].time.toFixed(3) + '</td>' +
+            '<td>' + attempts[i].diff.toFixed(3) + '</td>';
         historyBody.appendChild(row);
     }
 }
@@ -64,15 +61,8 @@ function updateHistory() {
 function updateStats() {
     if (attempts.length === 0) return;
 
-    var times = [];
-    for (var i = 0; i < attempts.length; i++) {
-        times.push(attempts[i].time);
-    }
-
-    var diffs = [];
-    for (var j = 0; j < times.length; j++) {
-        diffs.push(Math.abs(times[j] - TARGET_TIME));
-    }
+    var times = attempts.map(function(a) { return a.time; });
+    var diffs = times.map(function(t) { return Math.abs(t - TARGET_TIME); });
 
     document.getElementById('total').textContent = attempts.length;
     document.getElementById('best').textContent = Math.min.apply(Math, diffs).toFixed(3);
@@ -85,33 +75,19 @@ function updateChart() {
     var ctx = document.getElementById('chart').getContext('2d');
     if (chart) chart.destroy();
 
-    var labels = [];
-    var data = [];
-    var backgroundColors = [];
-
-    for (var i = 0; i < attempts.length; i++) {
-        labels.push(attempts[i].number);
-        data.push(attempts[i].time);
-
-        if (attempts[i].resultClass === 'perfect') {
-            backgroundColors.push('#28a745');
-        } else if (attempts[i].resultClass === 'good') {
-            backgroundColors.push('#17a2b8');
-        } else if (attempts[i].resultClass === 'fair') {
-            backgroundColors.push('#ffc107');
-        } else {
-            backgroundColors.push('#dc3545');
-        }
-    }
-
     chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels: attempts.map(function(a) { return a.number; }),
             datasets: [{
                 label: 'Your Time',
-                data: data,
-                backgroundColor: backgroundColors,
+                data: attempts.map(function(a) { return a.time; }),
+                backgroundColor: attempts.map(function(a) {
+                    if (a.resultClass === 'perfect') return '#28a745';
+                    if (a.resultClass === 'good') return '#17a2b8';
+                    if (a.resultClass === 'fair') return '#ffc107';
+                    return '#dc3545';
+                }),
                 borderColor: '#333',
                 borderWidth: 1
             }, {
@@ -131,7 +107,6 @@ function updateChart() {
     });
 }
 
-// Initialize toggle buttons
 ['history', 'stats', 'chart'].forEach(function(section) {
     document.getElementById('toggle-' + section).addEventListener('click', function() {
         document.getElementById(section + '-section').classList.toggle('hidden');
